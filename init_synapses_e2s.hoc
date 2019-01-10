@@ -1,0 +1,85 @@
+/*--------------------------------------------------------
+procedures to insert synapses with AMPAR and NMDAR
+
+AMPA is modelled with the built-in function AlphaSynapse
+NMDA is modelled with mechanisms from Kampa et al. 2004 
+
+Tiago Branco (2010)
+--------------------------------------------------------*/
+
+proc init_syn_params(){
+    AMPAtau1 = .1
+	AMPAtau2 = 2
+    AMPAgmaxset = 291       //500 pS
+    AMPAgmax =  AMPAgmaxset/1000000      //500 pS
+    NMDAgmax = 5000         //8000 pS (Popen is 0.2 so effective gmax = 1600 pS, use 5000 pS for active model)
+}
+
+
+// read file with synapse location
+objref mloc, floc
+floc = new File("./synapse_loc.dat")
+floc.ropen()
+mloc = new Matrix()
+mloc.scanf(floc)
+
+
+nsyn = 1
+proc init_syns(){
+    nsyn = $1
+    objectvar cAMPA[nsyn], cAMPApre[nsyn], cAMPAconn[nsyn], cNMDA[nsyn]
+    create PRE[nsyn]
+    
+    for n = 0, nsyn-1 {
+		apicid = mloc.x[n][0]
+		pos = mloc.x[n][1]
+		print n
+		addAMPA(apicid, pos, n)
+		addPRE(n)
+		addNMDA(apicid, pos, n) 
+    }
+}
+
+
+objectvar cAMPA[1]
+objectvar cAMPApre[1]
+objectvar cAMPAconn[1]
+
+proc addAMPA(){
+	apic[$1].nseg = 150 //change this appropriately
+    n = $3
+	cAMPA[n] = new Exp2Syn()
+	apic[$1] cAMPA[n].loc($2)
+	cAMPA[n].tau1 = AMPAtau1 
+	cAMPA[n].tau2 = AMPAtau2 
+    cAMPA[n].e = 0 // careful!
+	cAMPApre[n] = new NetStim()
+	cAMPApre[n].number = 1
+	cAMPApre[n].start = 1
+	cAMPApre[n].noise = 0
+	cAMPApre[n].interval = 5
+	cAMPAconn[n] = new NetCon(cAMPApre[n], cAMPA[n])
+	cAMPAconn[n].delay = 5
+	cAMPAconn[n].weight = AMPAgmax
+}
+
+create PRE[1]
+proc addPRE(){
+    n = $1
+	PRE[n] {diam=1 L=1}
+	PRE[n] {insert rel}
+	PRE[n].dur_rel = 0.5
+	PRE[n].amp_rel = 2
+}
+
+objectvar cNMDA[nsyn]
+proc addNMDA(){
+    n = $3
+	cNMDA[n] = new NMDA_Mg_T()
+	apic[$1] cNMDA[n].loc($2)
+	cNMDA[n].gmax = NMDAgmax
+	setpointer cNMDA[n].C, PRE[n].T_rel(0.5)
+	Erev_NMDA_Mg = 5
+	mg_NMDA_Mg_T = 1
+}
+

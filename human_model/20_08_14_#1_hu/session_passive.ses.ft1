@@ -1,0 +1,9 @@
+ParmFitness: Unnamed multiple run protocol
+	FitnessGenerator: Somatic AP
+		RegionFitness:	soma.v(.5)
+
+	Parameters:
+		"Ra", 246, 1e-09, 1e+09, 1, 1
+		"Cm", 0.857, 1e-09, 1e+09, 1, 1
+		"Rm", 26030, 1e-09, 1e+09, 1, 1
+End ParmFitness

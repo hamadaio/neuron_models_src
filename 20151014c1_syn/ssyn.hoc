@@ -1,0 +1,63 @@
+xopen("init_synapses.hoc")
+
+proc aarun()	{local saveDt, i
+	init_syn_params()
+	nsyn = mloc.nrow
+	init_syns(nsyn)
+	tstop = 800
+	tonset = 600
+	for s=0, nsyn-1 {  
+	    //jitter = r.uniform(-0, 0)  //to introduce jitter as in Fig. S14
+	    cAMPA[s].onset = tonset //+ jitter
+	    PRE[s].del_rel = tonset //+ jitter
+	} 
+	for s=nsyn-1, nsyn-1 {   //zero to...
+		cNMDA[s].gmax = 0
+		cAMPA[s].gmax = 0
+		for ss=s, nsyn-1 {  
+			cNMDA[ss].gmax = NMDAgmax
+			cAMPA[ss].gmax = AMPAgmax
+		}
+		finitialize(v_init)
+		fcurrent()
+		saveDt = dt
+		dt = .5
+		for i=1,545/dt fadvance()
+		dt = saveDt
+
+		init_channels()
+		Ra = 150
+		Rm = 25000
+		Cm = 1
+		
+		if (cvode.active()) {
+			cvode.re_init()
+		} else {
+			fcurrent()
+		}
+		frecord_init()
+	} 
+}
+
+
+proc a() {local saveDt, i
+
+	finitialize(v_init)
+	fcurrent()
+	saveDt = dt
+	dt = .5
+	for i=1,545/dt fadvance()
+	dt = saveDt
+
+	init_channels()
+	Ra = 150
+	Rm = 25000
+	Cm = 1
+	
+	if (cvode.active()) {
+		cvode.re_init()
+	} else {
+		fcurrent()
+	}
+	frecord_init()
+}

@@ -1,0 +1,160 @@
+{load_file("nrngui.hoc")}
+objectvar save_window_, rvp_
+objectvar scene_vector_[5]
+objectvar ocbox_, ocbox_list_, scene_, scene_list_
+{ocbox_list_ = new List()  scene_list_ = new List()}
+{pwman_place(1284,969,1)}
+
+//Begin MulRunFitter[0]
+{
+load_file("mulfit.hoc", "MulRunFitter")
+}
+{
+ocbox_ = new MulRunFitter(1)
+}
+{object_push(ocbox_)}
+{
+version(6)
+ranfac = 2
+fspec = new File("session_empty.ses.ft1")
+fdat = new File("session_empty.ses.fd1")
+read_data()
+build()
+}
+opt.set_optimizer("MulfitPraxWrap")
+{object_push(opt.optimizer)}
+{
+nstep = 0
+}
+{object_pop()}
+{object_pop()}
+{
+ocbox_.map("MulRunFitter[0]", 1284, 525, 397.44, 394.56)
+}
+objref ocbox_
+//End MulRunFitter[0]
+
+{
+xpanel("RunControl", 0)
+v_init = -96
+xvalue("Init","v_init", 1,"stdinit()", 1, 1 )
+xbutton("Init & Run","run()")
+xbutton("Stop","stoprun=1")
+runStopAt = 5
+xvalue("Continue til","runStopAt", 1,"{continuerun(runStopAt) stoprun=1}", 1, 1 )
+runStopIn = 0.1
+xvalue("Continue for","runStopIn", 1,"{continuerun(t + runStopIn) stoprun=1}", 1, 1 )
+xbutton("Single Step","steprun()")
+t = 600
+xvalue("t","t", 2 )
+tstop = 600
+xvalue("Tstop","tstop", 1,"tstop_changed()", 0, 1 )
+dt = 0.01
+xvalue("dt","dt", 1,"setdt()", 0, 1 )
+steps_per_ms = 100
+xvalue("Points plotted/ms","steps_per_ms", 1,"setdt()", 0, 1 )
+screen_update_invl = 0.05
+xvalue("Scrn update invl","screen_update_invl", 1,"", 0, 1 )
+realtime = 34.84
+xvalue("Real Time","realtime", 0,"", 0, 1 )
+xpanel(124,104)
+}
+{
+xpanel("nax (Globals)", 0)
+vShift_nax = 11
+xvalue("vShift_nax","vShift_nax", 1,"", 0, 0 )
+vShift_inact_nax = 7
+xvalue("vShift_inact_nax","vShift_inact_nax", 1,"", 0, 0 )
+maxrate_nax = 8000
+xvalue("maxrate_nax","maxrate_nax", 1,"", 0, 0 )
+temp_nax = 23
+xvalue("temp_nax","temp_nax", 1,"", 0, 0 )
+q10_nax = 3
+xvalue("q10_nax","q10_nax", 1,"", 0, 0 )
+q10h_nax = 3
+xvalue("q10h_nax","q10h_nax", 1,"", 0, 0 )
+xpanel(1592,151)
+}
+{
+xpanel("na (Globals)", 0)
+vShift_na = 12
+xvalue("vShift_na","vShift_na", 1,"", 0, 0 )
+vShift_inact_na = 16
+xvalue("vShift_inact_na","vShift_inact_na", 1,"", 0, 0 )
+maxrate_na = 8000
+xvalue("maxrate_na","maxrate_na", 1,"", 0, 0 )
+temp_na = 23
+xvalue("temp_na","temp_na", 1,"", 0, 0 )
+q10_na = 3
+xvalue("q10_na","q10_na", 1,"", 0, 0 )
+q10h_na = 3
+xvalue("q10h_na","q10h_na", 1,"", 0, 0 )
+xpanel(1284,289)
+}
+{
+xpanel("Temperature", 0)
+celsius = 31
+xvalue("celsius","celsius", 1,"", 0, 1 )
+xpanel(1590,57)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(545,600,-81.6,-75.9)
+scene_vector_[2] = save_window_
+{save_window_.view(545, -81.6, 55, 5.7, 561, 586, 353.28, 278.08)}
+graphList[0].append(save_window_)
+save_window_.save_name("graphList[0].")
+save_window_.addexpr("apic[44].v(.5)", 5, 1, 0.682205, 1.00799, 2)
+}
+{
+xpanel("nais (Globals)", 0)
+vShift_nais = 13
+xvalue("vShift_nais","vShift_nais", 1,"", 0, 0 )
+vShift_inact_nais = 14
+xvalue("vShift_inact_nais","vShift_inact_nais", 1,"", 0, 0 )
+maxrate_nais = 8000
+xvalue("maxrate_nais","maxrate_nais", 1,"", 0, 0 )
+temp_nais = 23
+xvalue("temp_nais","temp_nais", 1,"", 0, 0 )
+q10_nais = 3
+xvalue("q10_nais","q10_nais", 1,"", 0, 0 )
+q10h_nais = 3
+xvalue("q10h_nais","q10h_nais", 1,"", 0, 0 )
+xpanel(1282,57)
+}
+{
+save_window_ = new PlotShape(0)
+save_window_.size(-456.01,-33.1047,279.962,539.578)
+save_window_.variable("v")
+scene_vector_[3] = save_window_
+{save_window_.view(-456.01, 279.962, 422.905, 259.617, 647, 56, 461.76, 283.84)}
+fast_flush_list.append(save_window_)
+save_window_.save_name("fast_flush_list.")
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(545.15,600.15,-82.052,-81.882)
+scene_vector_[4] = save_window_
+{save_window_.view(545.15, -82.052, 55, 0.169998, 171, 588, 353.28, 278.08)}
+graphList[0].append(save_window_)
+save_window_.save_name("graphList[0].")
+save_window_.addexpr("soma.v(0.5)", 1, 1, 0.64984, 1.03898, 2)
+}
+{
+ocbox_ = new VBox()
+ocbox_list_.prepend(ocbox_)
+ocbox_.intercept(1)
+}
+{
+xpanel("PointBrowser", 0)
+xbutton("Globals","nrnglobalmechmenu(\"NMDA_Mg_T\")")
+xpanel()
+}
+{
+ocbox_ = ocbox_list_.object(0)
+ocbox_.intercept(0)
+ocbox_.map("NMDA_Mg_T", 1044, 527, 209.28, 299.52)
+}
+objref ocbox_
+objectvar scene_vector_[1]
+{doNotify()}

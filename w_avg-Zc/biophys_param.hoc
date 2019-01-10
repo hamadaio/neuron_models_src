@@ -1,0 +1,93 @@
+
+//xopen("2015_07_27_c2.hoc")
+xopen("2015_10_14_#1_human.hoc") //this big neuron requres tstop to be set to 60!
+
+
+access soma
+area(0.5)
+distance()
+
+proc geom_nseg() {
+	
+	soma area(0.5) // make sure diam reflects 3d points
+	//forall {nseg = int((L/(0.1*lambda_f(3000))+0.9)/2)*2+1} 
+	forall { nseg = int((L/(0.1*lambda_f(100))+.999)/2)*2 + 1  } //from Ted (way lower nseg)
+
+	
+}
+	
+geom_nseg()
+
+
+//--------------------------------------------------------------
+//  Initialise user-defined membrane parameters 
+// --------------------------------------------------------------
+
+proc parameters() {
+
+	celsius = 33		// makes AP amplitude larger …. could have been the rec. temperature.
+	Ri = 150	    			
+	Cm = 0.9	     		
+	Rm = 25000			// 25000 for L5 pyramidal neurons. see Kole et al.
+	Cm_myelin = 0.05     
+	Rm_myelin = 35000	
+	v_init = 0		
+	spinescale = 1					
+}
+
+
+
+// ----------------------------------------------------------------------------
+// Channel densities
+//-----------------------------------------------------------------------------
+
+
+
+
+proc init_channels() {
+
+//all		
+	forall {
+		insert pas 	 
+		Ra 	= Ri 
+		e_pas 	= v_init
+		g_pas 	= 1/Rm
+		cm 	= Cm
+		e_pas=v_init
+	}
+
+// dendrites
+	forsec basal {
+		 
+		
+			g_pas=1/(Rm/spinescale)
+			cm=Cm*spinescale 
+			
+					 
+	}
+	
+	forsec  apical {
+		
+		
+			g_pas=1/(Rm/spinescale)
+			cm=Cm*spinescale
+
+				 
+	}
+
+//soma	
+	soma  {
+			nseg=15
+		}
+	
+	forsec axonal {
+		L = 1e-12
+		diam = 1e-12
+		nseg = 1
+	}
+	
+}
+
+
+
+

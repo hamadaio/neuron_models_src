@@ -1,0 +1,16 @@
+{load_file("nrngui.hoc")}
+objectvar save_window_, rvp_
+objectvar scene_vector_[3]
+objectvar ocbox_, ocbox_list_, scene_, scene_list_
+{ocbox_list_ = new List()  scene_list_ = new List()}
+{pwman_place(0,0,0)}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,100,-76.4,-69)
+scene_vector_[2] = save_window_
+{save_window_.view(0, -76.4, 100, 7.4, 608, 23, 685.44, 350.08)}
+graphList[0].append(save_window_)
+save_window_.save_name("graphList[0].")
+save_window_.addexpr("soma.v(0.5)", 1, 1, 0.83338, 0.874332, 2)
+save_window_.addexpr("apic[42].v(.5)", 3, 1, 0.832213, 0.847898, 2)
+}

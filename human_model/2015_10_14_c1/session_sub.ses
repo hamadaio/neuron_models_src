@@ -1,0 +1,115 @@
+{load_file("nrngui.hoc")}
+objectvar save_window_, rvp_
+objectvar scene_vector_[6]
+objectvar ocbox_, ocbox_list_, scene_, scene_list_
+{ocbox_list_ = new List()  scene_list_ = new List()}
+{pwman_place(634,1132,1)}
+
+//Begin PointProcessManager
+{
+load_file("pointman.hoc")
+}
+{
+soma ocbox_ = new PointProcessManager(0)
+}
+{object_push(ocbox_)}
+{
+mt.select("IClamp") i = mt.selected()
+ms[i] = new MechanismStandard("IClamp")
+ms[i].set("del", 575, 0)
+ms[i].set("dur", 3.2, 0)
+ms[i].set("amp", 0.457, 0)
+mt.select("IClamp") i = mt.selected() maction(i)
+hoc_ac_ = 0.5
+sec.sec move() d1.flip_to(0)
+}
+{object_pop() doNotify()}
+{
+ocbox_ = ocbox_.v1
+ocbox_.map("PointProcessManager", 472, 0, 332.16, 333.12)
+}
+objref ocbox_
+//End PointProcessManager
+
+
+//Begin MulRunFitter[0]
+{
+load_file("mulfit.hoc", "MulRunFitter")
+}
+{
+ocbox_ = new MulRunFitter(1)
+}
+{object_push(ocbox_)}
+{
+version(6)
+ranfac = 2
+fspec = new File("session_sub.ses.ft1")
+fdat = new File("session_sub.ses.fd1")
+read_data()
+build()
+}
+opt.set_optimizer("MulfitPraxWrap")
+{object_push(opt.optimizer)}
+{
+nstep = 0
+}
+{object_pop()}
+{p.gengui(0, 454, 386, 1145.28, 471.36)}
+{p.showargs(1700, 666, 235.2, 127.68)}
+{object_pop()}
+{
+ocbox_.map("MulRunFitter[0]", 1685, 387, 354.24, 232.32)
+}
+objref ocbox_
+//End MulRunFitter[0]
+
+{
+xpanel("RunControl", 0)
+v_init = -97.5
+xvalue("Init","v_init", 1,"stdinit()", 1, 1 )
+xbutton("Init & Run","run()")
+xbutton("Stop","stoprun=1")
+runStopAt = 5
+xvalue("Continue til","runStopAt", 1,"{continuerun(runStopAt) stoprun=1}", 1, 1 )
+runStopIn = 1
+xvalue("Continue for","runStopIn", 1,"{continuerun(t + runStopIn) stoprun=1}", 1, 1 )
+xbutton("Single Step","steprun()")
+t = 686.05
+xvalue("t","t", 2 )
+tstop = 669.45
+xvalue("Tstop","tstop", 1,"tstop_changed()", 0, 1 )
+dt = 0.05
+xvalue("dt","dt", 1,"setdt()", 0, 1 )
+steps_per_ms = 20
+xvalue("Points plotted/ms","steps_per_ms", 1,"setdt()", 0, 1 )
+screen_update_invl = 0.05
+xvalue("Scrn update invl","screen_update_invl", 1,"", 0, 1 )
+realtime = 17.16
+xvalue("Real Time","realtime", 0,"", 0, 1 )
+xpanel(91,109)
+}
+{
+save_window_ = new PlotShape(0)
+save_window_.size(-252.217,120.616,338.497,635.505)
+save_window_.variable("v")
+scene_vector_[4] = save_window_
+{save_window_.view(-252.217, 338.497, 372.833, 297.008, 861, 0, 379.2, 302.08)}
+fast_flush_list.append(save_window_)
+save_window_.save_name("fast_flush_list.")
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(-3028.8,1567.41,-80,40)
+scene_vector_[5] = save_window_
+{save_window_.view(-3028.8, -80, 4596.21, 120, 1286, 0, 803.52, 326.08)}
+flush_list.append(save_window_)
+save_window_.save_name("flush_list.")
+objectvar rvp_
+rvp_ = new RangeVarPlot("v")
+apic[30] rvp_.begin(1)
+axon[81] rvp_.end(0)
+rvp_.origin(13.1996)
+save_window_.addobject(rvp_, 2, 1, 0.8, 0.9)
+}
+objectvar scene_vector_[1]
+{doNotify()}

@@ -1,0 +1,10 @@
+ParmFitness: Unnamed multiple run protocol
+	FitnessGenerator: Somatic AP
+		RegionFitness:	soma.v(.5)
+
+	Parameters:
+		"na_soma", 530, 1e-09, 1e+09, 0, 1
+		"na_max", 14000, 1e-09, 1e+09, 1, 1
+		"Kv1_soma", 100, -1e+06, 1e+06, 1, 0
+		"Kv1_dend", 20, -1e+06, 1e+06, 1, 0
+End ParmFitness
