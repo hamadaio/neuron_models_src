@@ -1,2 +1,3 @@
-# neuron_models_src
-phd neuron models
+# NEURON models
+
+Computational neuron models from my published research papers (PhD projects) 
